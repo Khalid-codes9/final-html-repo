@@ -1,0 +1,58 @@
+/* WhatsApp Tooltip Base State */
+.whatsapp-tooltip {
+    position: absolute;
+    top: 50%;
+    right: calc(100% + 14px);
+    translate: 0 -50%;
+    z-index: 1;
+    background-color: #1a1a1a;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Tooltip Little Pointer Arrow */
+.whatsapp-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -6px;
+    transform: translateY(-50%);
+    border-width: 6px 0 6px 6px;
+    border-style: solid;
+    border-color: transparent transparent transparent #1a1a1a;
+}
+
+/* Hover, focus & animation trigger */
+.whatsapp-float:hover .whatsapp-tooltip,
+.whatsapp-float:focus-visible .whatsapp-tooltip {
+    visibility: visible;
+    animation: bounceIn 0.4s ease forwards;
+}
+
+@keyframes bounceIn {
+    0%   { transform: translateY(8px);  opacity: 0; }
+    50%  { transform: translateY(-4px); opacity: 0.5; }
+    100% { transform: translateY(0);    opacity: 1; }
+}
+
+/* Respect reduced-motion settings */
+@media (prefers-reduced-motion: reduce) {
+    .whatsapp-float:hover .whatsapp-tooltip,
+    .whatsapp-float:focus-visible .whatsapp-tooltip {
+        animation: none;
+        opacity: 1;
+    }
+}
+
+/* Optional: no hover on touch devices, so hide the tooltip there */
+@media (hover: none) {
+    .whatsapp-tooltip { display: none; }
+} 
