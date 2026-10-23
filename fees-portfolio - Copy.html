@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>My Fees Portfolio | Explained Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --red: #c41e3a; --red-dark: #a01830; --ink: #22181a; --muted: #5b5457; --soft: #f7f3f3; --line: #e8dfe0; --ok: #1b7a3d; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Poppins', system-ui, sans-serif; line-height: 1.6; color: var(--ink); background: var(--soft); padding-bottom: env(safe-area-inset-bottom, 0px); }
+header { background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.08); padding: 12px 0; padding-top: calc(12px + env(safe-area-inset-top, 0px)); }
+.wrap { max-width: 900px; margin: 0 auto; padding: 0 16px; }
+.head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--red); font-weight: 700; }
+.brand img { height: 44px; width: auto; }
+.back { color: var(--red); font-weight: 600; text-decoration: none; }
+h1 { font-size: 1.6rem; margin: 24px 0 4px; color: var(--red); }
+.sub { color: var(--muted); margin-bottom: 18px; }
+.card { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin-bottom: 16px; }
+.card h2 { font-size: 1.1rem; margin-bottom: 12px; }
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px 16px; }
+.field label { display: block; font-weight: 600; font-size: .95rem; margin-bottom: 4px; }
+.field input, .field select { width: 100%; min-height: 48px; padding: 10px 12px; font: inherit; color: var(--ink); background: #fff; border: 1px solid #cdc2c4; border-radius: 6px; }
+.field input:focus, .field select:focus { outline: 3px solid rgba(196,30,58,.3); border-color: var(--red); }
+.full { grid-column: 1 / -1; }
+.btn { display: inline-block; background: var(--red); color: #fff; padding: 12px 24px; border-radius: 6px; font: inherit; font-weight: 600; border: 2px solid var(--red); cursor: pointer; }
+.btn:hover { background: var(--red-dark); border-color: var(--red-dark); }
+.btn.outline { background: #fff; color: var(--red); }
+.btn.outline:hover { background: var(--red); color: #fff; }
+.btn:focus-visible, .link-btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.stat { background: var(--soft); border-radius: 8px; padding: 12px; text-align: center; }
+.stat span { display: block; font-size: .85rem; color: var(--muted); }
+.stat strong { font-size: 1.25rem; }
+.stat.balance strong { color: var(--red); }
+.stat.balance.cleared strong { color: var(--ok); }
+.bar { height: 14px; background: var(--line); border-radius: 999px; overflow: hidden; margin: 14px 0 4px; }
+.bar > i { display: block; height: 100%; width: 0; background: var(--ok); transition: width .4s; }
+.pct { font-size: .9rem; color: var(--muted); }
+.status { font-weight: 600; margin-top: 8px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 9px 8px; border-bottom: 1px solid var(--line); text-align: left; font-size: .95rem; }
+thead th { background: var(--red); color: #fff; }
+td.num, th.num { text-align: right; white-space: nowrap; }
+.link-btn { background: none; border: 0; color: var(--red); font: inherit; font-weight: 600; cursor: pointer; text-decoration: underline; min-height: 40px; }
+.empty { color: var(--muted); padding: 10px 0; }
+.error { color: var(--red-dark); font-weight: 600; margin-top: 8px; }
+.error[hidden] { display: none; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.note { font-size: .85rem; color: var(--muted); }
+.print-head { display: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (max-width: 560px) { .grid { grid-template-columns: 1fr; } .summary { grid-template-columns: 1fr; } }
+@media print {
+    @page { margin: 14mm; }
+    body { background: #fff; }
+    header, .no-print, .actions { display: none !important; }
+    .print-head { display: block; text-align: center; margin-bottom: 12px; }
+    .card { border: 0; padding: 0; }
+    thead th { background: var(--red) !important; color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .bar > i { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+<header>
+    <div class="wrap head">
+        <a class="brand" href="index.html"><img src="explained1.png" alt="" onerror="this.hidden=true"><span>Explained Academy</span></a>
+        <a class="back" href="index.html">Back to website</a>
+    </div>
+</header>
+
+<main class="wrap">
+    <h1>My Fees Portfolio</h1>
+    <p class="sub">Work out your total fees, record each payment you make, and see what is left.</p>
+
+    <div class="print-head">
+        <h2>Explained Academy - Fees Statement</h2>
+        <p id="p-date"></p>
+    </div>
+
+    <section class="card" aria-labelledby="h-student">
+        <h2 id="h-student">1. About you</h2>
+        <div class="grid">
+            <div class="field full">
+                <label for="st-name">Full name</label>
+                <input id="st-name" type="text" autocomplete="name">
+            </div>
+            <div class="field">
+                <label for="st-prog">Programme</label>
+                <select id="st-prog"></select>
+            </div>
+            <div class="field">
+                <label for="st-fee">Programme fee (GHS)</label>
+                <input id="st-fee" type="number" inputmode="decimal" min="0" step="0.01">
+            </div>
+            <div class="field">
+                <label for="st-disc">Discount or scholarship (GHS, optional)</label>
+                <input id="st-disc" type="number" inputmode="decimal" min="0" step="0.01" value="0">
+            </div>
+            <div class="field">
+                <label for="st-extra">Other charges (GHS, optional)</label>
+                <input id="st-extra" type="number" inputmode="decimal" min="0" step="0.01" value="0">
+            </div>
+        </div>
+        <p class="note" style="margin-top:8px">The programme fee fills in by itself when you pick a programme. For Adult Education or B.EC.E 2000, type the amount you were told.</p>
+    </section>
+
+    <section class="card" aria-labelledby="h-sum">
+        <h2 id="h-sum">2. Your fees at a glance</h2>
+        <div class="summary" aria-live="polite">
+            <div class="stat"><span>Total to pay</span><strong id="t-total">GHS 0.00</strong></div>
+            <div class="stat"><span>Paid so far</span><strong id="t-paid">GHS 0.00</strong></div>
+            <div class="stat balance" id="t-bal-box"><span id="t-bal-label">Balance left</span><strong id="t-bal">GHS 0.00</strong></div>
+        </div>
+        <div class="bar" role="progressbar" aria-label="Share of fees paid" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="t-bar"><i id="t-bar-fill"></i></div>
+        <p class="pct" id="t-pct">0% paid</p>
+        <p class="status" id="t-status"></p>
+    </section>
+
+    <section class="card no-print" aria-labelledby="h-add">
+        <h2 id="h-add">3. Add a payment</h2>
+        <form id="pay-form" novalidate>
+            <div class="grid">
+                <div class="field">
+                    <label for="pay-date">Date paid</label>
+                    <input id="pay-date" type="date" required>
+                </div>
+                <div class="field">
+                    <label for="pay-amt">Amount paid (GHS)</label>
+                    <input id="pay-amt" type="number" inputmode="decimal" min="0.01" step="0.01" required>
+                </div>
+                <div class="field">
+                    <label for="pay-method">Paid by</label>
+                    <select id="pay-method">
+                        <option>Mobile Money</option>
+                        <option>Cash</option>
+                        <option>Bank</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="pay-ref">Receipt / reference no. (optional)</label>
+                    <input id="pay-ref" type="text" maxlength="60">
+                </div>
+            </div>
+            <p class="error" id="pay-error" role="alert" hidden></p>
+            <p style="margin-top:12px"><button class="btn" type="submit">Add payment</button></p>
+        </form>
+    </section>
+
+    <section class="card" aria-labelledby="h-hist">
+        <h2 id="h-hist">4. Payment history</h2>
+        <div id="hist-empty" class="empty">No payments recorded yet.</div>
+        <div style="overflow-x:auto">
+            <table id="hist-table" hidden>
+                <thead><tr><th scope="col">#</th><th scope="col">Date</th><th scope="col">Paid by</th><th scope="col">Reference</th><th scope="col" class="num">Amount (GHS)</th><th scope="col" class="no-print"><span class="sr-only">Remove</span></th></tr></thead>
+                <tbody id="hist-body"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <div class="actions">
+        <button class="btn" type="button" id="btn-print">Print / save statement as PDF</button>
+        <button class="btn outline" type="button" id="btn-reset">Clear everything</button>
+    </div>
+    <p class="note" style="margin:14px 0 24px">This is your own record, kept only on this phone or computer. It is not an official receipt. Always keep the receipt the academy office gives you, and bring it if the figures differ.</p>
+</main>
+
+<script>
+(function () {
+    // Keep these in step with the Fee Profile table on the main website
+    var FEES = { "Pure Science": 7500, "Home Economics": 7500, "General Art": 7000, "Business Studies": 6500,
+                 "Visual Art": 6500, "Technical Studies": 8000, "Agricultural Science": 7000 };
+    var KEY = "ea-fees-portfolio";
+    var $ = function (id) { return document.getElementById(id); };
+    var state = { name: "", prog: "", fee: 0, disc: 0, extra: 0, pays: [] };
+
+    // Programme dropdown
+    var sel = $("st-prog");
+    sel.innerHTML = '<option value="">Select a programme</option>';
+    Object.keys(FEES).concat(["Adult Education", "B.EC.E 2000", "Other"]).forEach(function (p) {
+        var o = document.createElement("option"); o.textContent = p; sel.appendChild(o);
+    });
+
+    function load() { try { var s = JSON.parse(localStorage.getItem(KEY) || "null"); if (s && Array.isArray(s.pays)) state = s; } catch (e) {} }
+    function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+    function money(n) { return "GHS " + Number(n).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+    function num(v) { var n = parseFloat(v); return isFinite(n) && n > 0 ? Math.round(n * 100) / 100 : 0; }
+
+    function render() {
+        var total = Math.max(0, state.fee - state.disc + state.extra);
+        var paid = state.pays.reduce(function (a, p) { return a + p.amount; }, 0);
+        var bal = Math.round((total - paid) * 100) / 100;
+        var pct = total > 0 ? Math.min(100, Math.round(paid / total * 100)) : 0;
+        $("t-total").textContent = money(total);
+        $("t-paid").textContent = money(paid);
+        $("t-bal-label").textContent = bal < 0 ? "Overpaid by" : "Balance left";
+        $("t-bal").textContent = money(Math.abs(bal));
+        $("t-bal-box").classList.toggle("cleared", bal <= 0 && total > 0);
+        $("t-bar-fill").style.width = pct + "%";
+        $("t-bar").setAttribute("aria-valuenow", pct);
+        $("t-pct").textContent = pct + "% paid";
+        $("t-status").textContent = total <= 0 ? "Choose your programme to see your total." :
+            bal === 0 ? "Fully paid. Thank you!" :
+            bal < 0 ? "You have paid more than the total. Please check with the academy office." :
+            "You still owe " + money(bal) + ".";
+        $("p-date").textContent = (state.name ? state.name + " | " : "") + (state.prog ? state.prog + " | " : "") + new Date().toLocaleDateString("en-GB");
+
+        var body = $("hist-body"); body.innerHTML = "";
+        state.pays.slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; }).forEach(function (p, i) {
+            var tr = document.createElement("tr");
+            [String(i + 1), p.date.split("-").reverse().join("/"), p.method, p.ref || "-", p.amount.toLocaleString("en-GH", { minimumFractionDigits: 2 })].forEach(function (t, c) {
+                var td = document.createElement("td"); td.textContent = t; if (c === 4) td.className = "num"; tr.appendChild(td);
+            });
+            var td = document.createElement("td"); td.className = "no-print";
+            var b = document.createElement("button"); b.type = "button"; b.className = "link-btn"; b.textContent = "Remove";
+            b.setAttribute("aria-label", "Remove payment of " + money(p.amount));
+            b.addEventListener("click", function () {
+                if (confirm("Remove this payment of " + money(p.amount) + "?")) {
+                    state.pays = state.pays.filter(function (x) { return x.id !== p.id; }); save(); render();
+                }
+            });
+            td.appendChild(b); tr.appendChild(td); body.appendChild(tr);
+        });
+        $("hist-table").hidden = !state.pays.length;
+        $("hist-empty").hidden = !!state.pays.length;
+    }
+
+    function fill() {
+        $("st-name").value = state.name; sel.value = state.prog; $("st-fee").value = state.fee || "";
+        $("st-disc").value = state.disc || 0; $("st-extra").value = state.extra || 0;
+    }
+
+    $("st-name").addEventListener("input", function () { state.name = this.value.trim().slice(0, 120); save(); render(); });
+    sel.addEventListener("change", function () {
+        state.prog = sel.value;
+        if (FEES[sel.value]) { state.fee = FEES[sel.value]; $("st-fee").value = state.fee; }
+        save(); render();
+    });
+    $("st-fee").addEventListener("input", function () { state.fee = num(this.value); save(); render(); });
+    $("st-disc").addEventListener("input", function () { state.disc = num(this.value); save(); render(); });
+    $("st-extra").addEventListener("input", function () { state.extra = num(this.value); save(); render(); });
+
+    $("pay-date").value = new Date().toISOString().slice(0, 10);
+    $("pay-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var err = $("pay-error"), amt = num($("pay-amt").value), date = $("pay-date").value;
+        if (!date) { err.hidden = false; err.textContent = "Please choose the date you paid."; return; }
+        if (!amt) { err.hidden = false; err.textContent = "Please enter an amount greater than zero."; $("pay-amt").focus(); return; }
+        err.hidden = true;
+        state.pays.push({ id: Date.now() + Math.random(), date: date, amount: amt, method: $("pay-method").value, ref: $("pay-ref").value.trim().slice(0, 60) });
+        save(); render();
+        $("pay-amt").value = ""; $("pay-ref").value = ""; $("pay-amt").focus();
+    });
+
+    $("btn-print").addEventListener("click", function () { window.print(); });
+    $("btn-reset").addEventListener("click", function () {
+        if (confirm("This will delete your details and all recorded payments from this device. Continue?")) {
+            state = { name: "", prog: "", fee: 0, disc: 0, extra: 0, pays: [] }; save(); fill(); render();
+        }
+    });
+
+    load(); fill(); render();
+})();
+</script>
+</body>
+</html>

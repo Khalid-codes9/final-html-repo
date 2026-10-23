@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Candidate Face Login | Explained Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --red: #c41e3a; --red-dark: #a01830; --ink: #22181a; --muted: #5b5457; --soft: #f7f3f3; --line: #e8dfe0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Poppins', system-ui, sans-serif; line-height: 1.6; color: var(--ink); background: var(--soft); min-height: 100vh; display: grid; place-items: center; padding: 20px 16px; }
+.card { width: 100%; max-width: 440px; padding: 28px; background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--red); border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,.06); }
+h1 { font-size: 1.4rem; color: var(--red); margin-bottom: 4px; }
+.sub { color: var(--muted); margin-bottom: 20px; font-size: .95rem; }
+label { display: block; font-weight: 600; margin-bottom: 6px; }
+input { width: 100%; min-height: 48px; padding: 12px 14px; font: inherit; border: 1px solid #cdc2c4; border-radius: 6px; margin-bottom: 16px; }
+input:focus { outline: 3px solid rgba(196,30,58,.3); border-color: var(--red); }
+.btn { width: 100%; min-height: 48px; background: var(--red); color: #fff; border: 0; border-radius: 6px; font: inherit; font-weight: 600; cursor: pointer; }
+.btn:hover { background: var(--red-dark); }
+.btn:disabled { opacity: .6; cursor: default; }
+.btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.msg { margin-top: 16px; padding: 12px 14px; border-radius: 6px; font-weight: 500; }
+.msg[hidden] { display: none; }
+.msg.good { background: #eef8f1; color: #14532d; }
+.msg.bad { background: #fdeaea; color: #8a1226; }
+.back { display: inline-block; margin-top: 18px; color: var(--red); font-weight: 600; }
+</style>
+</head>
+<body>
+<main class="card">
+    <h1>Candidate face login</h1>
+    <p class="sub">Enter your email or candidate number, then look at the camera to confirm it is you.</p>
+    <form id="fl-form">
+        <label for="fl-id">Email or candidate number</label>
+        <input id="fl-id" type="text" autocomplete="username" required>
+        <button class="btn" type="submit">Continue with face check</button>
+    </form>
+    <p class="msg" id="fl-msg" role="status" hidden></p>
+    <a class="back" href="index.html">Back to Explained Academy</a>
+</main>
+
+<script src="face-auth.js"></script>
+<script>
+(function () {
+    // Same Google Apps Script web-app URL as on the main page. Leave "" to test on this device only.
+    var BACKEND = "";
+    var NEXT = "exam.html";   // where to go after a successful face check
+    var form = document.getElementById("fl-form"), msg = document.getElementById("fl-msg"), btn = form.querySelector("button");
+
+    function show(text, good) { msg.hidden = false; msg.className = "msg " + (good ? "good" : "bad"); msg.textContent = text; }
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var id = document.getElementById("fl-id").value.trim();
+        msg.hidden = true;
+        if (!window.EAFace) return show("Face login could not load. Refresh the page and try again.");
+        btn.disabled = true;
+        EAFace.load().catch(function () {});   // start downloading while the camera opens
+
+        var done;
+        if (BACKEND) {
+            // The server compares the faces, so the saved template never comes to the browser
+            done = EAFace.capture({ title: "Face login" }).then(function (face) {
+                return fetch(BACKEND, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify({ action: "face_verify", id: id, face: face }) }).then(function (r) { return r.json(); });
+            }).then(function (j) {
+                if (!j.ok) throw new Error(j.error || "Face login failed. Please try again.");
+                return j;
+            });
+        } else {
+            var saved = EAFace.getLocal(id);
+            if (!saved) { btn.disabled = false; return show("No face login is set up for this email or candidate number on this device."); }
+            done = EAFace.verify(saved, { title: "Face login" }).then(function (r) {
+                if (!r.match) throw new Error("Your face did not match the face set up at registration. Please try again in good light.");
+                return { ok: true };
+            });
+        }
+        done.then(function (j) {
+            show("✓ Identity confirmed. Opening your exam...", true);
+            try { sessionStorage.setItem("ea-face-ok", JSON.stringify({ id: id, token: j.token || "", at: Date.now() })); } catch (e) {}
+            setTimeout(function () { location.href = NEXT; }, 900);
+        }).catch(function (e) {
+            if (!e.cancelled) show(e.message);
+            btn.disabled = false;
+        });
+    });
+})();
+</script>
+</body>
+</html>
