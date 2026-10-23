@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Examination Login | Explained Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --red: #c41e3a; --red-dark: #a01830; --ink: #22181a; --muted: #5b5457; --soft: #f7f3f3; --line: #e8dfe0; --ok: #1b7a3d; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Poppins', system-ui, sans-serif; line-height: 1.6; color: var(--ink); background: var(--soft); padding-bottom: env(safe-area-inset-bottom, 0px); }
+header { background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.08); padding: 12px 0; padding-top: calc(12px + env(safe-area-inset-top, 0px)); }
+.wrap { max-width: 760px; margin: 0 auto; padding: 0 16px; }
+.head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--red); font-weight: 700; }
+.brand img { height: 44px; width: auto; }
+.back { color: var(--red); font-weight: 600; text-decoration: none; }
+h1 { font-size: 1.6rem; margin: 24px 0 4px; color: var(--red); }
+.sub { color: var(--muted); margin-bottom: 18px; }
+.card { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+.card h2 { font-size: 1.15rem; margin-bottom: 10px; }
+.field { margin-bottom: 14px; }
+.field label { display: block; font-weight: 600; font-size: .95rem; margin-bottom: 4px; }
+.field input { width: 100%; min-height: 48px; padding: 10px 12px; font: inherit; font-size: 1rem; color: var(--ink); background: #fff; border: 1px solid #cdc2c4; border-radius: 6px; }
+.field input:focus { outline: 3px solid rgba(196,30,58,.3); border-color: var(--red); }
+.otp { letter-spacing: .4em; font-size: 1.4rem !important; text-align: center; }
+.btn { display: inline-block; background: var(--red); color: #fff; padding: 12px 24px; border-radius: 6px; font: inherit; font-weight: 600; border: 2px solid var(--red); cursor: pointer; }
+.btn:hover { background: var(--red-dark); border-color: var(--red-dark); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn.outline { background: #fff; color: var(--red); }
+.btn:focus-visible, .link-btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.link-btn { background: none; border: 0; color: var(--red); font: inherit; font-weight: 600; cursor: pointer; text-decoration: underline; min-height: 40px; }
+.msg { margin: 10px 0; font-weight: 600; }
+.msg.err { color: var(--red-dark); }
+.msg.ok { color: var(--ok); }
+.msg[hidden], .step[hidden] { display: none; }
+.subjects { display: grid; gap: 10px; }
+.subjects .btn { text-align: left; }
+.timer { position: sticky; top: 0; z-index: 5; background: #fff; border-bottom: 3px solid var(--red); padding: 10px 16px; padding-top: calc(10px + env(safe-area-inset-top, 0px)); display: flex; justify-content: space-between; font-weight: 700; }
+.timer.low { color: var(--red); }
+fieldset.q { border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; background: #fff; }
+fieldset.q legend { font-weight: 600; padding: 0 6px; }
+.opt { display: flex; align-items: flex-start; gap: 10px; padding: 10px; border-radius: 6px; cursor: pointer; min-height: 44px; }
+.opt:hover { background: var(--soft); }
+.opt input { margin-top: 5px; width: 20px; height: 20px; accent-color: var(--red); flex: none; }
+.big { font-size: 2.2rem; font-weight: 700; color: var(--red); }
+.note { font-size: .85rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<header>
+    <div class="wrap head">
+        <a class="brand" href="index.html"><img src="explained1.png" alt="" onerror="this.hidden=true"><span>Explained Academy</span></a>
+        <a class="back" href="index.html">Back to website</a>
+    </div>
+</header>
+
+<div class="timer" id="timer" hidden><span id="t-subject"></span><span id="t-left" aria-live="off"></span></div>
+
+<main class="wrap">
+    <h1>Examination Login</h1>
+    <p class="sub" id="intro">Log in with your candidate number to write your examination.</p>
+
+    <section class="card step" id="step-login" aria-labelledby="h1">
+        <h2 id="h1">Step 1: Enter your details</h2>
+        <form id="f-login" novalidate>
+            <div class="field"><label for="in-ref">Candidate number</label>
+                <input id="in-ref" type="text" placeholder="EA-2026-0001" autocapitalize="characters" autocomplete="off" required></div>
+            <div class="field"><label for="in-phone">Phone number you registered with</label>
+                <input id="in-phone" type="tel" inputmode="tel" placeholder="024 000 0000" autocomplete="tel" required></div>
+            <p class="msg err" id="m-login" role="alert" hidden></p>
+            <button class="btn" type="submit" id="b-login">Send me a login code</button>
+        </form>
+    </section>
+
+    <section class="card step" id="step-otp" hidden aria-labelledby="h2">
+        <h2 id="h2">Step 2: Enter your code</h2>
+        <p class="sub" style="margin-bottom:12px">If your details match a registration, a 6-digit code was sent to your phone or email. It works for 10 minutes.</p>
+        <form id="f-otp" novalidate>
+            <div class="field"><label for="in-otp">6-digit code</label>
+                <input id="in-otp" class="otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" required></div>
+            <p class="msg err" id="m-otp" role="alert" hidden></p>
+            <button class="btn" type="submit" id="b-otp">Log in</button>
+            <button class="link-btn" type="button" id="b-back">Use different details</button>
+        </form>
+    </section>
+
+    <section class="card step" id="step-subjects" hidden aria-labelledby="h3">
+        <h2 id="h3">Step 3: Choose a paper</h2>
+        <p class="sub" id="welcome" style="margin-bottom:12px"></p>
+        <div class="subjects" id="subjects"></div>
+        <p class="msg err" id="m-sub" role="alert" hidden></p>
+        <p class="note" style="margin-top:12px">Each paper can be written once and is timed. The clock starts when you open the paper.</p>
+    </section>
+
+    <section class="step" id="step-exam" hidden>
+        <form id="f-exam" novalidate>
+            <div id="questions"></div>
+            <p class="msg err" id="m-exam" role="alert" hidden></p>
+            <button class="btn" type="submit" id="b-submit">Submit paper</button>
+        </form>
+    </section>
+
+    <section class="card step" id="step-result" hidden aria-labelledby="h5">
+        <h2 id="h5">Paper submitted</h2>
+        <p id="result-text"></p>
+        <p style="margin-top:14px"><button class="btn outline" type="button" id="b-next">Back to my papers</button></p>
+    </section>
+</main>
+
+<script>
+(function () {
+    // Paste the SAME Google Apps Script web-app URL you used in index.html
+    var BACKEND = "";
+    var $ = function (id) { return document.getElementById(id); };
+    var token = "", ref = "", subject = "", minutes = 60, timerId = 0, answers = {}, submitting = false;
+    var steps = ["login", "otp", "subjects", "exam", "result"];
+
+    function show(name) {
+        steps.forEach(function (s) { $("step-" + s).hidden = s !== name; });
+        $("timer").hidden = name !== "exam";
+        $("intro").hidden = name === "exam";
+        window.scrollTo(0, 0);
+    }
+    function say(id, text, ok) { var m = $(id); m.hidden = !text; m.textContent = text || ""; m.className = "msg " + (ok ? "ok" : "err"); }
+    function api(payload) {
+        return fetch(BACKEND, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) })
+            .then(function (r) { return r.json(); });
+    }
+    function down() { say("m-login", "The examination portal is not switched on yet. Please contact the academy office."); $("b-login").disabled = true; }
+    if (!BACKEND) down();
+
+    // Step 1: request code
+    $("f-login").addEventListener("submit", function (e) {
+        e.preventDefault();
+        ref = $("in-ref").value.trim().toUpperCase();
+        var phone = $("in-phone").value.replace(/[\s\-().]/g, "").replace(/^\+?233/, "0");
+        if (!ref || !/^0\d{9}$/.test(phone)) { say("m-login", "Enter your candidate number and a valid 10-digit phone number."); return; }
+        say("m-login", ""); $("b-login").disabled = true;
+        api({ action: "otp_request", ref: ref, phone: phone }).then(function (j) {
+            if (!j.ok) { say("m-login", j.error === "too_many" ? "Too many attempts. Please wait 15 minutes and try again." : "Something went wrong. Please try again."); return; }
+            show("otp"); $("in-otp").value = ""; $("in-otp").focus();
+        }).catch(function () { say("m-login", "No connection. Check your internet and try again."); })
+          .then(function () { $("b-login").disabled = !BACKEND; });
+    });
+    $("b-back").addEventListener("click", function () { say("m-otp", ""); show("login"); });
+
+    // Step 2: verify code
+    $("f-otp").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var otp = $("in-otp").value.replace(/\D/g, "");
+        if (otp.length !== 6) { say("m-otp", "Enter the 6-digit code."); return; }
+        say("m-otp", ""); $("b-otp").disabled = true;
+        api({ action: "otp_verify", ref: ref, otp: otp }).then(function (j) {
+            if (!j.ok) {
+                say("m-otp", j.error === "wrong" ? "That code is not correct." : j.error === "locked" ? "Too many wrong codes. Request a new code." : "That code has expired. Request a new code.");
+                return;
+            }
+            token = j.token; minutes = j.minutes;
+            $("welcome").textContent = "Welcome, " + j.name + " (" + j.programme + ").";
+            listSubjects(j.subjects, j.done); show("subjects");
+        }).catch(function () { say("m-otp", "No connection. Check your internet and try again."); })
+          .then(function () { $("b-otp").disabled = false; });
+    });
+
+    function listSubjects(subjects, done) {
+        var box = $("subjects"); box.innerHTML = "";
+        subjects.forEach(function (name) {
+            var b = document.createElement("button"); b.type = "button"; b.className = "btn outline";
+            var isDone = done.indexOf(name) > -1;
+            b.textContent = name + (isDone ? "  (written)" : "");
+            b.disabled = isDone;
+            b.addEventListener("click", function () { openPaper(name); });
+            box.appendChild(b);
+        });
+        box.dataset.subjects = JSON.stringify(subjects); box.dataset.done = JSON.stringify(done);
+    }
+
+    // Step 3: open a paper
+    function openPaper(name) {
+        if (!confirm("Open " + name + "? The timer (" + minutes + " minutes) starts now.")) return;
+        say("m-sub", "");
+        api({ action: "exam_get", token: token, subject: name }).then(function (j) {
+            if (!j.ok) {
+                say("m-sub", j.error === "noquestions" ? "No questions have been added for this paper yet." :
+                    j.error === "done" ? "You have already written this paper." : "Your session has ended. Please log in again.");
+                if (j.error === "session") show("login");
+                return;
+            }
+            subject = name; answers = {}; submitting = false; renderQuestions(j.questions); startTimer(j.secondsLeft); show("exam");
+        }).catch(function () { say("m-sub", "No connection. Check your internet and try again."); });
+    }
+
+    function renderQuestions(qs) {
+        var box = $("questions"); box.innerHTML = ""; $("t-subject").textContent = subject;
+        qs.forEach(function (q, n) {
+            var fs = document.createElement("fieldset"); fs.className = "q";
+            var lg = document.createElement("legend"); lg.textContent = (n + 1) + ". " + q.q; fs.appendChild(lg);
+            q.options.forEach(function (text, i) {
+                if (!text) return;
+                var letter = "ABCD"[i], l = document.createElement("label"); l.className = "opt";
+                var r = document.createElement("input"); r.type = "radio"; r.name = "q" + q.id; r.value = letter;
+                r.addEventListener("change", function () { answers[q.id] = letter; });
+                var s = document.createElement("span"); s.textContent = letter + ". " + text;
+                l.appendChild(r); l.appendChild(s); fs.appendChild(l);
+            });
+            box.appendChild(fs);
+        });
+    }
+
+    function startTimer(seconds) {
+        clearInterval(timerId);
+        var end = Date.now() + seconds * 1000;
+        function tick() {
+            var s = Math.max(0, Math.round((end - Date.now()) / 1000));
+            $("t-left").textContent = Math.floor(s / 60) + ":" + ("0" + (s % 60)).slice(-2);
+            $("timer").classList.toggle("low", s <= 300);
+            if (s === 0) { clearInterval(timerId); submit(true); }
+        }
+        tick(); timerId = setInterval(tick, 1000);
+    }
+
+    window.addEventListener("beforeunload", function (e) { if (!$("step-exam").hidden && !submitting) { e.preventDefault(); e.returnValue = ""; } });
+
+    // Submit
+    $("f-exam").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var unanswered = $("questions").children.length - Object.keys(answers).length;
+        if (!confirm(unanswered ? "You have " + unanswered + " unanswered question(s). Submit anyway?" : "Submit your paper now?")) return;
+        submit(false);
+    });
+    function submit(auto) {
+        if (submitting) return; submitting = true; clearInterval(timerId); $("b-submit").disabled = true;
+        say("m-exam", auto ? "Time is up. Submitting your paper..." : "Submitting...", true);
+        api({ action: "exam_submit", token: token, subject: subject, answers: answers }).then(function (j) {
+            if (!j.ok) { submitting = false; $("b-submit").disabled = false; say("m-exam", "Could not submit. Check your internet and press Submit again."); return; }
+            say("m-exam", "");
+            $("result-text").innerHTML = "";
+            var p = document.createElement("p");
+            if (j.hidden) { p.textContent = "Your answers have been recorded. Results will be released by the academy."; $("result-text").appendChild(p); }
+            else {
+                p.textContent = subject + ": your score is"; var b = document.createElement("div"); b.className = "big"; b.textContent = j.score + " / " + j.total;
+                $("result-text").appendChild(p); $("result-text").appendChild(b);
+            }
+            show("result");
+        }).catch(function () { submitting = false; $("b-submit").disabled = false; say("m-exam", "No connection. Press Submit again when you are back online."); });
+    }
+
+    // Back to papers
+    $("b-next").addEventListener("click", function () {
+        var box = $("subjects"), subs = JSON.parse(box.dataset.subjects || "[]"), done = JSON.parse(box.dataset.done || "[]");
+        if (done.indexOf(subject) < 0) done.push(subject);
+        listSubjects(subs, done); show("subjects");
+    });
+})();
+</script>
+</body>
+</html>
