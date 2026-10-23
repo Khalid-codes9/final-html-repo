@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Study App | Explained Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<style>
+:root{--red:#c41e3a;--ink:#1f2330;--mut:#6b7080;--bg:#f6f4f4;--ok:#1b7f4b}
+*{box-sizing:border-box}
+body{margin:0;font-family:Poppins,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+header{background:var(--red);color:#fff;padding:12px 18px;display:flex;align-items:center;gap:12px}
+header img{height:40px;width:40px;object-fit:contain;background:#fff;border-radius:50%}
+header h1{font-size:1rem;margin:0;flex:1}header a{color:#fff;font-size:.85rem}
+#tabs{display:flex;gap:6px;max-width:680px;margin:14px auto 0;padding:0 14px;overflow-x:auto}
+#tabs button{padding:9px 14px;border:1.5px solid #cfd2da;border-radius:8px;background:#fff;font:600 .9rem Poppins,sans-serif;cursor:pointer;white-space:nowrap}
+#tabs .on{background:var(--red);border-color:var(--red);color:#fff}
+main{max-width:680px;margin:14px auto 90px;padding:0 14px}
+.card{background:#fff;border-radius:10px;padding:20px;box-shadow:0 1px 4px #0002;margin-bottom:14px}
+h2{margin:0 0 8px;font-size:1.2rem}.sub,small{color:var(--mut)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat{text-align:center;margin:0;color:var(--mut);font-size:.85rem}.stat b{display:block;font-size:1.9rem;color:var(--red)}
+input,select,textarea{width:100%;padding:10px;margin:6px 0;border:1.5px solid #cfd2da;border-radius:8px;font:inherit}
+textarea{min-height:80px}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid #c41e3a55}
+.b{width:100%;margin-top:10px;padding:11px;border:0;border-radius:8px;background:var(--red);color:#fff;font:600 1rem Poppins,sans-serif;cursor:pointer}
+.alt{background:#fff;color:var(--red);border:1.5px solid var(--red)}
+.row{display:flex;gap:8px}.row .b{margin-top:0}
+.fc{min-height:170px;display:flex;flex-direction:column;justify-content:center;text-align:center;cursor:pointer;font-size:1.1rem}
+.opt{display:block;width:100%;text-align:left;padding:10px 12px;margin-bottom:6px;border:1.5px solid #e0e2e8;border-radius:8px;background:#fff;font:inherit;cursor:pointer}
+.opt.good{border-color:var(--ok);background:#e9f6ef}.opt.bad{border-color:var(--red);background:#fdf0f2}
+.good{color:var(--ok);font-weight:600}.score{font-size:2.4rem;font-weight:700;color:var(--red)}
+.x{border:0;background:none;color:var(--red);cursor:pointer;font:inherit;text-decoration:underline}
+.msg{color:var(--red);font-size:.9rem;margin-top:8px}
+.fab{position:fixed;right:14px;bottom:14px;display:flex;gap:8px}
+.fab button{padding:10px 14px;border:0;border-radius:20px;background:var(--ink);color:#fff;font:600 .85rem Poppins,sans-serif;cursor:pointer}
+#modal{position:fixed;inset:0;background:#0007;display:flex;align-items:center;justify-content:center;padding:14px;z-index:9}
+#modal .mb{background:#fff;border-radius:10px;padding:20px;width:100%;max-width:520px;max-height:85vh;overflow:auto}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header><img src="explained1.png" alt="Explained Academy logo"><h1>Explained Academy Study App</h1><a href="index.html">Back to website</a></header>
+<div id="tabs"></div>
+<main id="app"></main>
+<div class="fab"><button onclick="pad()">Scratchpad</button><button onclick="ref()">Formulas</button></div>
+<div id="modal" hidden><div class="mb"><div id="mc"></div><button class="b alt" onclick="$('#modal').hidden=true">Close</button></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } };
+const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const MATH = { delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}], throwOnError:false };
+
+// Starter questions. Add your own in the "Questions" tab. Use $...$ for maths.
+const SEED = [
+  {subject:'Core Maths', q:'Solve $x^2-5x+6=0$.', o:['x = 2 or 3','x = -2 or -3','x = 1 or 6','x = 5 or 1'], ans:'A', why:'Factorise: $(x-2)(x-3)=0$.'},
+  {subject:'Core Maths', q:'What is $\\frac{3}{4}$ of 80?', o:['40','60','64','20'], ans:'B', why:'$80\\times0.75=60$.'},
+  {subject:'Physics', q:'The SI unit of force is the...', o:['Joule','Watt','Newton','Pascal'], ans:'C', why:'$F=ma$, measured in newtons.'},
+  {subject:'Chemistry', q:'What is the chemical symbol for sodium?', o:['S','Na','So','N'], ans:'B', why:'From the Latin name natrium.'},
+  {subject:'Biology', q:'Which organelle produces most of a cell\'s ATP?', o:['Nucleus','Ribosome','Mitochondrion','Golgi body'], ans:'C', why:'Aerobic respiration happens in the mitochondria.'}
+];
+const fresh = () => SEED.map((c, i) => ({id:Date.now() + i, ef:2.5, iv:0, rp:0, due:0, ...c}));
+let cards = load('ea_cards', null) || fresh();
+let hist = load('ea_hist', []);
+let tab = 'dash', st = {};
+const persist = () => save('ea_cards', cards);
+
+// SM-2 spaced repetition: q is 0-5 (below 3 means forgotten).
+function sm2(c, q){
+  if (q < 3) { c.rp = 0; c.iv = 1; }
+  else { c.rp++; c.iv = c.rp === 1 ? 1 : c.rp === 2 ? 6 : Math.round(c.iv * c.ef); }
+  c.ef = Math.max(1.3, c.ef + .1 - (5 - q) * (.08 + (5 - q) * .02));
+  c.due = Date.now() + c.iv * 864e5;
+}
+const subjects = () => [...new Set(cards.map(c => c.subject))];
+const opts = () => '<option value="">All subjects</option>' + subjects().map(s => `<option>${esc(s)}</option>`).join('');
+function draw(h){ $('#app').innerHTML = h; if (window.renderMathInElement) renderMathInElement($('#app'), MATH); }
+
+const tabs = [['dash','Dashboard'],['flash','Flashcards'],['quiz','Quiz'],['bank','Questions']];
+function go(k){
+  tab = k; st = {};
+  $('#tabs').innerHTML = tabs.map(([t, n]) => `<button class="${t === k ? 'on' : ''}" onclick="go('${t}')">${n}</button>`).join('');
+  ({dash, flash, quiz, bank})[k]();
+}
+
+function dash(){
+  const now = Date.now(), due = cards.filter(c => c.due <= now).length, mast = cards.filter(c => c.iv >= 21).length;
+  const avg = hist.length ? Math.round(hist.reduce((a, h) => a + h.s / h.t, 0) / hist.length * 100) : 0;
+  draw(`<div class="grid"><div class="card stat"><b>${cards.length}</b>questions</div><div class="card stat"><b>${due}</b>due now</div>
+  <div class="card stat"><b>${mast}</b>mastered</div><div class="card stat"><b>${avg}%</b>quiz average</div></div>
+  <div class="card"><h2>By subject</h2>${subjects().map(s => { const n = cards.filter(c => c.subject === s);
+  return `<p>${esc(s)}: ${n.length} questions, ${n.filter(c => c.due <= now).length} due</p>`; }).join('')}</div>`);
+}
+
+function flash(){
+  if (!st.deck) return draw(`<div class="card"><h2>Flashcards</h2><p class="sub">Review the cards that are due. Cards you find hard come back sooner.</p>
+    <select id="sub">${opts()}</select><button class="b" onclick="fstart()">Start review</button><div class="msg" id="fm"></div></div>`);
+  const c = st.deck[st.i];
+  if (!c) return draw(`<div class="card"><h2>All done</h2><p>You reviewed ${st.deck.length} cards.</p><button class="b" onclick="go('flash')">Back</button></div>`);
+  draw(`<p class="sub">Card ${st.i + 1} of ${st.deck.length}</p>
+  <div class="card fc" onclick="st.show=true;flash()"><p>${esc(c.q)}</p>${st.show ? `<hr><p class="good">${esc(c.o['ABCD'.indexOf(c.ans)])}</p><small>${esc(c.why || '')}</small>` : '<small>Tap to show the answer</small>'}</div>
+  ${st.show ? `<div class="row">${[['Again',1],['Hard',3],['Good',4],['Easy',5]].map(([n, q]) => `<button class="b" onclick="grade(${q})">${n}</button>`).join('')}</div>` : ''}`);
+}
+function fstart(){
+  const s = $('#sub').value, deck = cards.filter(c => c.due <= Date.now() && (!s || c.subject === s));
+  if (!deck.length) return $('#fm').textContent = 'Nothing is due. Try the quiz or come back later.';
+  st = {deck, i:0}; flash();
+}
+function grade(q){ sm2(st.deck[st.i], q); persist(); st.i++; st.show = false; flash(); }
+
+function quiz(){
+  if (!st.qs) return draw(`<div class="card"><h2>Quiz</h2><select id="sub">${opts()}</select>
+    <select id="n"><option>5</option><option>10</option><option>20</option></select><button class="b" onclick="qstart()">Start quiz</button></div>`);
+  const c = st.qs[st.i];
+  if (!c){
+    hist.push({s:st.s, t:st.qs.length, d:Date.now()}); save('ea_hist', hist);
+    return draw(`<div class="card"><h2>Your score</h2><div class="score">${st.s} / ${st.qs.length}</div><button class="b" onclick="go('quiz')">Try again</button></div>`);
+  }
+  draw(`<p class="sub">Question ${st.i + 1} of ${st.qs.length}</p><div class="card"><p><b>${esc(c.q)}</b></p>
+  ${c.o.map((t, k) => { const L = 'ABCD'[k], cl = st.p ? (L === c.ans ? 'good' : L === st.p ? 'bad' : '') : '';
+  return `<button class="opt ${cl}" ${st.p ? 'disabled' : ''} onclick="pick('${L}')">${L}. ${esc(t)}</button>`; }).join('')}
+  ${st.p ? `<p>${esc(c.why || '')}</p><button class="b" onclick="st.i++;st.p=null;quiz()">Next</button>` : ''}</div>`);
+}
+function qstart(){
+  const s = $('#sub').value, n = +$('#n').value;
+  const qs = cards.filter(c => !s || c.subject === s).sort(() => Math.random() - .5).slice(0, n);
+  if (qs.length){ st = {qs, i:0, s:0, p:null}; quiz(); }
+}
+function pick(L){ const c = st.qs[st.i]; st.p = L; if (L === c.ans) st.s++; sm2(c, L === c.ans ? 4 : 1); persist(); quiz(); }
+
+function bank(){
+  draw(`<div class="card"><h2>Add a question</h2><input id="bs" placeholder="Subject" list="sl">
+  <datalist id="sl">${subjects().map(s => `<option>${esc(s)}`).join('')}</datalist>
+  <textarea id="bq" placeholder="Question (write maths like $x^2$)"></textarea>
+  ${[0,1,2,3].map(k => `<input id="o${k}" placeholder="Option ${'ABCD'[k]}">`).join('')}
+  <select id="ba"><option>A</option><option>B</option><option>C</option><option>D</option></select>
+  <input id="bw" placeholder="Explanation (optional)"><button class="b" onclick="add()">Save question</button><div class="msg" id="bm"></div></div>
+  <div class="card"><h2>All questions (${cards.length})</h2>${cards.map(c => `<p>${esc(c.subject)}: ${esc(c.q)} <button class="x" onclick="del(${c.id})">Delete</button></p>`).join('')}
+  <button class="b alt" onclick="reset()">Reset to starter questions</button></div>`);
+}
+function add(){
+  const o = [0,1,2,3].map(k => $('#o' + k).value.trim()), s = $('#bs').value.trim(), q = $('#bq').value.trim();
+  if (!s || !q || o.some(x => !x)) return $('#bm').textContent = 'Fill in the subject, the question and all four options.';
+  cards.push({id:Date.now(), subject:s, q, o, ans:$('#ba').value, why:$('#bw').value.trim(), ef:2.5, iv:0, rp:0, due:0});
+  persist(); bank();
+}
+function del(id){ cards = cards.filter(c => c.id !== id); persist(); bank(); }
+function reset(){ if (confirm('Delete all progress and restore the starter questions?')){ cards = fresh(); persist(); bank(); } }
+
+function modal(h){ $('#mc').innerHTML = h; $('#modal').hidden = false; if (window.renderMathInElement) renderMathInElement($('#mc'), MATH); }
+function pad(){
+  modal('<h2>Scratchpad</h2><textarea id="pd" rows="10" placeholder="Work things out here. It saves on this device."></textarea>');
+  $('#pd').value = load('ea_pad', ''); $('#pd').oninput = e => save('ea_pad', e.target.value);
+}
+function ref(){
+  modal(`<h2>Formula sheet</h2><p>Quadratic formula: $x=\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}$</p><p>Area of a circle: $A=\\pi r^2$</p>
+  <p>Pythagoras: $a^2+b^2=c^2$</p><p>Speed: $v=\\frac{d}{t}$, Force: $F=ma$</p>`);
+}
+addEventListener('keydown', e => { if (e.key === 'Escape') $('#modal').hidden = true; });
+go('dash');
+</script>
+</body>
+</html>

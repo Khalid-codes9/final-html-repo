@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exam Portal | Explained Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--red:#c41e3a;--ink:#1f2330;--mut:#6b7080;--bg:#f6f4f4;--ok:#1b7f4b}
+*{box-sizing:border-box}
+body{margin:0;font-family:Poppins,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+header{background:var(--red);color:#fff;padding:12px 18px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:5}
+header img{height:40px;width:40px;object-fit:contain;background:#fff;border-radius:50%}
+header h1{font-size:1rem;margin:0;flex:1}
+#timer{font-weight:700;font-size:1.05rem}
+main{max-width:660px;margin:22px auto;padding:0 14px}
+.card{background:#fff;border-radius:10px;padding:22px;box-shadow:0 1px 4px #0002;margin-bottom:16px}
+h2{margin:0 0 6px;font-size:1.25rem}
+p.sub{margin:0 0 16px;color:var(--mut);font-size:.9rem}
+label.f{display:block;font-size:.85rem;font-weight:600;margin:12px 0 4px}
+input,select{width:100%;padding:11px;border:1.5px solid #cfd2da;border-radius:8px;font:inherit}
+input:focus,select:focus,button:focus-visible{outline:3px solid #c41e3a55;border-color:var(--red)}
+button.b{margin-top:16px;width:100%;padding:12px;border:0;border-radius:8px;background:var(--red);color:#fff;font:600 1rem Poppins,sans-serif;cursor:pointer}
+button.b:hover{background:#a3172f}
+.msg{margin-top:10px;font-size:.9rem;color:var(--red)}
+.q p{margin:0 0 8px;font-weight:600}
+.q small{color:var(--mut);font-weight:400}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border:1.5px solid #e0e2e8;border-radius:8px;margin-bottom:6px;cursor:pointer}
+.opt:has(input:checked){border-color:var(--red);background:#fdf0f2}
+.opt input{width:auto;margin-top:5px}
+.good{color:var(--ok);font-weight:600}.bad{color:var(--red);font-weight:600}
+.score{font-size:2.4rem;font-weight:700;color:var(--red);margin:6px 0}
+button:disabled{opacity:.4;cursor:default}
+.row{display:flex;gap:10px;margin-bottom:4px}.row .b{margin-top:0}
+.alt{background:#fff!important;color:var(--red)!important;border:1.5px solid var(--red)!important}
+.bar{height:6px;background:#e5e7ee;border-radius:3px;overflow:hidden}
+#bar{height:100%;width:0;background:var(--red);transition:width .2s}
+.prog{font-size:.85rem;color:var(--mut);margin:8px 0 0}
+#nav{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 14px}
+#nav button{width:36px;height:36px;border:1.5px solid #cfd2da;border-radius:8px;background:#fff;font:600 .85rem Poppins,sans-serif;cursor:pointer}
+#nav .done{background:#fdf0f2;border-color:var(--red)}
+#nav .cur{background:var(--red);color:#fff;border-color:var(--red)}
+.warn{background:#fff;color:var(--red);padding:2px 10px;border-radius:6px}
+.show{display:flex;gap:8px;align-items:center;font-size:.85rem;margin-top:8px;color:var(--mut)}.show input{width:auto}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <img src="explained1.png" alt="Explained Academy logo">
+  <h1>Explained Academy Exam Portal</h1>
+  <span id="timer" hidden></span>
+</header>
+<main>
+
+<section id="login" class="card">
+  <h2>Student login</h2>
+  <p class="sub">Enter your Student ID and the OTP the school gave you after your fees payment.</p>
+  <label class="f" for="sid">Student ID</label>
+  <input id="sid" autocomplete="off">
+  <label class="f" for="otp">OTP</label>
+  <input id="otp" type="password" inputmode="numeric" maxlength="6" autocomplete="off">
+  <label class="show"><input type="checkbox" onchange="$('otp').type=this.checked?'text':'password'"> Show OTP</label>
+  <button class="b" onclick="login()">Log in</button>
+  <div class="msg" id="lm"></div>
+</section>
+
+<section id="menu" class="card" hidden>
+  <h2 id="hi"></h2>
+  <p class="sub">Choose what you want to do.</p>
+  <label class="f" for="subj">Subject</label>
+  <select id="subj"></select>
+  <label class="f" for="type">Mode</label>
+  <select id="type">
+    <option value="Past">Practise past questions (answers shown after)</option>
+    <option value="Exam">Take timed online exam</option>
+  </select>
+  <button class="b" onclick="start()">Start</button>
+  <div class="msg" id="mm"></div>
+</section>
+
+<section id="quiz" hidden>
+  <div class="bar"><div id="bar"></div></div>
+  <div class="prog" id="prog"></div>
+  <div id="nav"></div>
+  <div id="qs"></div>
+  <div class="row">
+    <button class="b alt" id="prev" onclick="go(S.i-1)">Previous</button>
+    <button class="b" id="next" onclick="go(S.i+1)">Next</button>
+  </div>
+  <button class="b" onclick="submitQuiz()">Submit answers</button>
+</section>
+
+<section id="result" class="card" hidden>
+  <h2>Your result</h2>
+  <div class="score" id="sc"></div>
+  <div id="rv"></div>
+  <button class="b" onclick="show('menu')">Back to menu</button>
+</section>
+
+</main>
+<script>
+const API = 'PASTE_YOUR_WEB_APP_URL_HERE';
+const S = {};
+const $ = id => document.getElementById(id);
+
+function show(id){
+  document.querySelectorAll('main > section').forEach(s => s.hidden = s.id !== id);
+  if (id !== 'quiz') { clearInterval(S.t); $('timer').hidden = true; }
+  scrollTo(0, 0);
+}
+function msg(id, t){ $(id).textContent = t || ''; }
+
+async function call(body){
+  const r = await fetch(API, { method:'POST', body: JSON.stringify({ token:S.token, ...body }) });
+  const d = await r.json();
+  if (d.error) throw new Error(d.error);
+  return d;
+}
+
+async function login(){
+  msg('lm', 'Checking...');
+  try {
+    const d = await call({ action:'login', id:$('sid').value, otp:$('otp').value });
+    S.token = d.token;
+    $('hi').textContent = 'Welcome, ' + d.name;
+    $('subj').innerHTML = '';
+    d.subjects.forEach(s => $('subj').add(new Option(s, s)));
+    msg('lm', ''); show('menu');
+  } catch (e) { msg('lm', e.message); }
+}
+
+async function start(){
+  msg('mm', 'Loading questions...');
+  S.subject = $('subj').value; S.type = $('type').value;
+  try {
+    const d = await call({ action:'questions', subject:S.subject, type:S.type });
+    if (!d.questions.length) return msg('mm', 'No questions have been added for this yet.');
+    S.qs = d.questions; msg('mm', '');
+    const box = $('qs'); box.innerHTML = '';
+    d.questions.forEach((q, i) => {
+      const c = document.createElement('div'); c.className = 'card q';
+      const p = document.createElement('p');
+      p.textContent = (i + 1) + '. ' + q.q;
+      if (q.year) { const y = document.createElement('small'); y.textContent = '  (' + q.year + ')'; p.append(y); }
+      c.append(p);
+      q.o.forEach((t, k) => {
+        if (!t) return;
+        const l = document.createElement('label'); l.className = 'opt';
+        const r = document.createElement('input'); r.type = 'radio'; r.name = 'q' + q.id; r.value = 'ABCD'[k];
+        const s = document.createElement('span'); s.textContent = 'ABCD'[k] + '. ' + t;
+        l.append(r, s); c.append(l);
+      });
+      box.append(c);
+    });
+    show('quiz'); build();
+    onbeforeunload = e => { e.preventDefault(); return ''; };
+    if (S.type === 'Exam') {
+      let left = d.minutes * 60; const tm = $('timer'); tm.hidden = false;
+      const tick = () => {
+        tm.textContent = Math.floor(left / 60) + ':' + String(left % 60).padStart(2, '0');
+        tm.className = left < 300 ? 'warn' : '';
+        if (left-- <= 0) { clearInterval(S.t); submitQuiz(true); }
+      };
+      tick(); S.t = setInterval(tick, 1000);
+    }
+  } catch (e) { msg('mm', e.message); }
+}
+
+async function submitQuiz(force){
+  const open = S.qs.filter(q => !document.querySelector('input[name="q' + q.id + '"]:checked')).length;
+  if (!force && open && !confirm(open + ' question(s) not answered. Submit anyway?')) return;
+  clearInterval(S.t);
+  const answers = {};
+  S.qs.forEach(q => {
+    const c = document.querySelector('input[name="q' + q.id + '"]:checked');
+    if (c) answers[q.id] = c.value;
+  });
+  try {
+    const d = await call({ action:'submit', subject:S.subject, type:S.type, answers });
+    onbeforeunload = null;
+    $('sc').textContent = d.score + ' / ' + d.total + ' (' + Math.round(d.score / d.total * 100) + '%)';
+    const rv = $('rv'); rv.innerHTML = '';
+    (d.review || []).forEach((x, i) => {
+      const div = document.createElement('div'); div.className = 'q'; div.style.marginBottom = '12px';
+      const ok = x.yours === x.correct;
+      div.innerHTML = '<p></p><div></div><small></small>';
+      div.children[0].textContent = (i + 1) + '. ' + x.q;
+      div.children[1].className = ok ? 'good' : 'bad';
+      div.children[1].textContent = ok ? 'Correct: ' + x.correct : 'You chose ' + (x.yours || 'nothing') + '. Correct: ' + x.correct;
+      div.children[2].textContent = x.why || '';
+      rv.append(div);
+    });
+    show('result');
+  } catch (e) { alert(e.message); }
+}
+
+const picked = q => document.querySelector('input[name="q' + q.id + '"]:checked');
+
+function build(){
+  const nav = $('nav'); nav.innerHTML = '';
+  S.qs.forEach((q, i) => {
+    const b = document.createElement('button');
+    b.textContent = i + 1; b.setAttribute('aria-label', 'Go to question ' + (i + 1));
+    b.onclick = () => go(i); nav.append(b);
+  });
+  $('qs').onchange = paint;
+  go(0);
+}
+function go(i){
+  if (i < 0 || i >= S.qs.length) return;
+  S.i = i;
+  [...$('qs').children].forEach((c, k) => c.hidden = k !== i);
+  paint();
+}
+function paint(){
+  const n = S.qs.length, done = S.qs.filter(picked).length;
+  [...$('nav').children].forEach((b, k) => b.className = (picked(S.qs[k]) ? 'done ' : '') + (k === S.i ? 'cur' : ''));
+  $('prog').textContent = 'Question ' + (S.i + 1) + ' of ' + n + ', ' + done + ' answered';
+  $('bar').style.width = (done / n * 100) + '%';
+  $('prev').disabled = S.i === 0; $('next').disabled = S.i === n - 1;
+}
+
+// Keyboard: press A-D to answer, left/right arrows to move between questions.
+document.addEventListener('keydown', e => {
+  if ($('quiz').hidden) return;
+  const k = e.key.toUpperCase();
+  if (k.length === 1 && 'ABCD'.includes(k)) {
+    const r = $('qs').children[S.i].querySelector('input[value="' + k + '"]');
+    if (r) { r.checked = true; paint(); }
+  } else if (e.target.tagName !== 'INPUT' && e.key === 'ArrowRight') go(S.i + 1);
+  else if (e.target.tagName !== 'INPUT' && e.key === 'ArrowLeft') go(S.i - 1);
+});
+// Press Enter to log in.
+['sid', 'otp'].forEach(id => $(id).addEventListener('keydown', e => e.key === 'Enter' && login()));
+</script>
+</body>
+</html>

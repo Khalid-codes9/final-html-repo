@@ -1,0 +1,24 @@
+﻿ID,Answer,Explanation,Reveal seconds
+CHEM-INTRO-001,A,"Yard is an imperial unit of length, not an S.I. unit.",
+CHEM-ATOM-001,A,"A mass spectrum displays a distinct peak for every unique isotope present in the sample. Since this spectrum contains exactly three separate peaks, it signifies that the element is composed of three isotopes.",30
+CHEM-ATOM-002,B,"The number of orbitals in any shell is given by the formula n², where n is the principal quantum number (shell number). For the third shell (n = 3), the total number of orbitals is 3² = 9 (one s orbital, three p orbitals, and five d orbitals).",30
+CHEM-ATOM-003,D,"In a neutral atom, the number of electrons always equals the number of protons, not neutrons. The number of neutrons can vary, which is why isotopes of the same element exist.",30
+CHEM-ATOM-004,A,The relative atomic mass is calculated using the formula: (35 × 0.75) + (37 × 0.25) = 26.25 + 9.25 = 35.5.,30
+CHEM-ATOM-005,C,"This configuration has 23 electrons (Vanadium, V) with partially filled d-orbitals, which is characteristic of transition metals.",30
+CHEM-PER1-001,B,"As protons are added to the nucleus across a period without increasing the principal energy level, the nuclear attraction on the valence electrons increases.",30
+CHEM-IAB-001,D,"Cesium (Cs) has the lowest electronegativity and Fluorine (F) has the highest electronegativity, creating the largest electronegativity difference and highest ionic character.",30
+CHEM-IAB-002,A,"In boron trifluoride (BF₃), the central boron atom shares 3 pairs of electrons, giving it a total of only 6 valence electrons around it.",30
+CHEM-IAB-003,D,The ammonium ion (NH₄⁺) is formed when an ammonia molecule donates its lone pair of electrons on nitrogen to a hydrogen ion (H⁺) via a dative bond.,30
+CHEM-IAB-004,C,"Valence electrons in metals are delocalized and free to move throughout the crystal lattice, easily carrying electrical current and heat energy.",30
+CHEM-IMB-001,B,"Because oxygen is highly electronegative and small, hydrogen atoms bonded to oxygen in H₂O form strong intermolecular hydrogen bonds, requiring more thermal energy to separate.",30
+CHEM-IMB-002,D,"Carbon dioxide is linear. The polar C=O bond dipoles point in opposite directions and cancel each other out completely, resulting in zero net dipole moment.",30
+CHEM-HYB-001,A,Oxygen has two bonding pairs and two lone pairs. The repulsion between lone pairs forces the O-H bonds into a bent or V-shaped geometry.,30
+CHEM-ATOM-006,B,"Nitrogen has atomic number 7, so a neutral atom has 7 electrons. Filling sub-shells in order of increasing energy gives 1s² 2s² 2p³. The s sub-shells hold 4 electrons in total (2 in 1s and 2 in 2s), and the p sub-shell (2p) holds 3 electrons.",30
+CHEM-ATOM-007,A,"Relative atomic mass takes into account both the mass and the natural abundance percentage of each isotope (like Cl-35 and Cl-37), making it a weighted average rather than a simple average.",30
+CHEM-ATOM-008,B,"A mass spectrometer separates ions based on their mass-to-charge ratio to determine the relative isotopic masses and abundances, allowing the calculation of the relative atomic mass of an element.",30
+CHEM-ATOM-009,B,"A protium atom (¹₁H) has an atomic number of 1 and a mass number of 1. It contains 1 proton, 1 electron, and 0 neutrons (mass number − atomic number = 1 − 1 = 0). Therefore, the true statement is that it has no neutron.",30
+CHEM-ATOM-010,"B,C","Dalton's theory held that atoms of an element are identical and indivisible, so it could not account for isotopy or radioactivity (B). It also said nothing about the relative charges of the particles inside the atom (C), because subatomic particles were discovered later. Both B and C are accepted.",30
+CHEM-ATOM-011,D,"A is false: electrons fill orbitals in a set order of energy. B is false: electrons enter the lowest-energy orbitals first. C is false: a maximum of two electrons can occupy one orbital. D is the answer given in the SSSCE 1997 marking scheme, although the statement describes Hund's rule.",30
+CHEM-ATOM-012,D,"Atomic number = number of protons = 12. For a neutral atom, the number of electrons = 12. Neutrons = mass number − atomic number = 24 − 12 = 12. Since the atomic number (12) and the number of neutrons (12) are equal, statement D is true.",30
+CHEM-ATOM-013,C,"All s-orbitals have a symmetrical spherical shape around the nucleus, whereas p-orbitals have a dumb-bell shape.",30
+CHEM-ATOM-014,D,"One of Dalton's postulates is that atoms cannot be created or destroyed in a chemical reaction. Options A, B and C describe discoveries made long after Dalton.",30
